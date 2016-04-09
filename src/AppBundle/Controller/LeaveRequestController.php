@@ -465,7 +465,7 @@ class LeaveRequestController extends Controller
     private function sendAdminMail($subject, $template, $entity)
     {
     	$em = $this->getDoctrine()->getManager();
-    	$list_admin = $em->getRepository('AppBundle:User')->findUserByRole('ROLE_ADMIN');
+    	$list_admin = $em->getRepository('AppBundle:User')->getUserByRole('ROLE_ADMIN');
     	foreach($list_admin as $admin)
     	{
 	    	$message = \Swift_Message::newInstance()

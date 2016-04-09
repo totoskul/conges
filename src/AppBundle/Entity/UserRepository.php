@@ -14,7 +14,7 @@ class UserRepository extends EntityRepository
 {
 	
 	
-	public function findUserByRole($role)
+	public function getUserByRole($role)
 	{
 		$result =  $this->createQueryBuilder()
 		->addSelect('u')

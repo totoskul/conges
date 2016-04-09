@@ -66,44 +66,30 @@ class LeaveRequestController extends Controller
             $leaveDetail->setLeaveStatus($status_to_update);
             
             $em->persist($leaveDetail);
-            // Décrémenter les congés disponibles en commençant par les plus anciens. 
-			try
-			{
-				//$this->decrementLeaves($leaveDetail->getUser(),$leaveDetail->getLeaveType(), $leaveDetail->getNbDays(), 
-				//$leaveDetail->getStartDate(), $leaveDetail->getEndDate());
-			}
-			catch(\Exception $e)
-			{
-				return $this->redirect($this->generateUrl('validate', array('error_message'=>$e->getMessage())));
-			}
+            
             $em->flush();
-			$message = \Swift_Message::newInstance()
-			->setSubject('[F3E] Congés validés')
-			->setFrom('webmaster@f3e.asso.fr')
-			->setTo('l.delcayrou@f3e.asso.fr')
-			->setCc(array('h.hachouche@f3e.asso.fr'))
-			->setBody(
-            $this->renderView(
+            try {
+            	$user_email = $leaveDetail->getUser()->getEmail();
+				$message = \Swift_Message::newInstance()
+					->setSubject('[F3E] Congés validés')
+				->setFrom('webmaster@f3e.asso.fr')
+				->setTo($user_email)
+				//->setCc(array('h.hachouche@f3e.asso.fr'))
+				->setBody(
+            	$this->renderView(
                 // app/Resources/views/Emails/registration.html.twig
                 'Emails/validation.html.twig',
                 array('entity' => $leaveDetail)
-            ),
-            'text/html'
-        )
-        /*
-         * If you also want to include a plaintext version of the message
-        ->addPart(
-            $this->renderView(
-                'Emails/registration.txt.twig',
-                array('name' => $name)
-            ),
-            'text/plain'
-        )
-        */
+            	),
+            	'text/html'
+        	)
     ;
 	$this->get('mailer')->send($message);
-
-
+	
+            }
+            catch(\Exception $e)
+            {
+        }
             return $this->redirect($this->generateUrl('validate'));
         }
 
@@ -136,7 +122,29 @@ class LeaveRequestController extends Controller
 			$this->incrementLeaves($leaveDetail->getUser(),$leaveDetail->getLeaveType(), $leaveDetail->getNbDays());
 
             $em->flush();
-			$message = \Swift_Message::newInstance()
+            try {
+            	$user_email = $leaveDetail->getUser()->getEmail();
+            	$message = \Swift_Message::newInstance()
+            	->setSubject('[F3E] Congés refusés')
+            	->setFrom('webmaster@f3e.asso.fr')
+            	->setTo($user_email)
+            	//->setCc(array('h.hachouche@f3e.asso.fr'))
+            	->setBody(
+            			$this->renderView(
+            					// app/Resources/views/Emails/registration.html.twig
+            					'Emails/reject.html.twig',
+            					array('entity' => $leaveDetail)
+            					),
+            			'text/html'
+            			)
+            			;
+            	$this->get('mailer')->send($message);
+            
+            }
+            catch(\Exception $e)
+            {
+            }
+			/*$message = \Swift_Message::newInstance()
 			->setSubject('[F3E] Congés refusés')
 			->setFrom('webmaster@f3e.asso.fr')
 			->setTo('l.delcayrou@f3e.asso.fr')
@@ -149,18 +157,9 @@ class LeaveRequestController extends Controller
             ),
             'text/html'
         )
-        /*
-         * If you also want to include a plaintext version of the message
-        ->addPart(
-            $this->renderView(
-                'Emails/registration.txt.twig',
-                array('name' => $name)
-            ),
-            'text/plain'
-        )
-        */
+        
     ;
-	    $this->get('mailer')->send($message);
+	    $this->get('mailer')->send($message);*/
             return $this->redirect($this->generateUrl('validate'));
         }
 

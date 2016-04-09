@@ -465,24 +465,27 @@ class LeaveRequestController extends Controller
     private function sendAdminMail($subject, $template, $entity)
     {
     	$em = $this->getDoctrine()->getManager();
-    	$list_admin = $em->getRepository('AppBundle:User')->getUserByRole('ROLE_ADMIN');
+    	$list_admin = $em->getRepository('AppBundle:User')->findAll();
     	foreach($list_admin as $admin)
     	{
-	    	$message = \Swift_Message::newInstance()
-	    	->setSubject($subject)
-	    	->setFrom('webmaster@f3e.asso.fr')
-	    	->setTo($admin->getEmail())
-	    	->setBody(
-	    			$this->renderView(
-	    					// app/Resources/views/Emails/registration.html.twig
-	    					$template,
-	    					array('entity' => $entity)
-	    					),
-	    			'text/html'
-	    			)
-	    			
-	    	;
-	    	$this->get('mailer')->send($message);
+    		if($admin->hasRole('ROLE_ADMIN'))
+    		{
+		    	$message = \Swift_Message::newInstance()
+		    	->setSubject($subject)
+		    	->setFrom('webmaster@f3e.asso.fr')
+		    	->setTo($admin->getEmail())
+		    	->setBody(
+		    			$this->renderView(
+		    					// app/Resources/views/Emails/registration.html.twig
+		    					$template,
+		    					array('entity' => $entity)
+		    					),
+		    			'text/html'
+		    			)
+		    			
+		    	;
+		    	$this->get('mailer')->send($message);
+    		}
     	}
     }
     

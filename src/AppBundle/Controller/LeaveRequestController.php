@@ -74,10 +74,8 @@ class LeaveRequestController extends Controller
 					->setSubject('[F3E] Congés validés')
 				->setFrom('webmaster@f3e.asso.fr')
 				->setTo($user_email)
-				//->setCc(array('h.hachouche@f3e.asso.fr'))
 				->setBody(
             	$this->renderView(
-                // app/Resources/views/Emails/registration.html.twig
                 'Emails/validation.html.twig',
                 array('entity' => $leaveDetail)
             	),
@@ -128,7 +126,6 @@ class LeaveRequestController extends Controller
             	->setSubject('[F3E] Congés refusés')
             	->setFrom('webmaster@f3e.asso.fr')
             	->setTo($user_email)
-            	//->setCc(array('h.hachouche@f3e.asso.fr'))
             	->setBody(
             			$this->renderView(
             					// app/Resources/views/Emails/registration.html.twig
@@ -144,22 +141,7 @@ class LeaveRequestController extends Controller
             catch(\Exception $e)
             {
             }
-			/*$message = \Swift_Message::newInstance()
-			->setSubject('[F3E] Congés refusés')
-			->setFrom('webmaster@f3e.asso.fr')
-			->setTo('l.delcayrou@f3e.asso.fr')
-			->setCc(array('h.hachouche@f3e.asso.fr'))
-			->setBody(
-            $this->renderView(
-                // app/Resources/views/Emails/registration.html.twig
-                'Emails/reject.html.twig',
-                array('entity' => $leaveDetail)
-            ),
-            'text/html'
-        )
-        
-    ;
-	    $this->get('mailer')->send($message);*/
+			
             return $this->redirect($this->generateUrl('validate'));
         }
 
@@ -222,33 +204,9 @@ class LeaveRequestController extends Controller
 			$this->incrementLeaves($leaveDetail->getUser(),$leaveDetail->getLeaveType(), $leaveDetail->getNbDays());
 
             $em->flush();
-			$message = \Swift_Message::newInstance()
-			->setSubject('[F3E] Congés validés')
-			->setFrom('webmaster@f3e.asso.fr')
-			->setTo('l.delcayrou@f3e.asso.fr')
-			->setCc(array('h.hachouche@f3e.asso.fr'))
-			->setBody(
-            $this->renderView(
-                // app/Resources/views/Emails/registration.html.twig
-                'Emails/cancelLeave.html.twig',
-                array('entity' => $leaveDetail)
-            ),
-            'text/html'
-        )
-        /*
-         * If you also want to include a plaintext version of the message
-        ->addPart(
-            $this->renderView(
-                'Emails/registration.txt.twig',
-                array('name' => $name)
-            ),
-            'text/plain'
-        )
-        */
-    ;
-	$this->get('mailer')->send($message);
-            return $this->redirect($this->generateUrl('homepage'));
-
+            
+            $this->sendAdminMail('[F3E] Congés annulés','Emails/cancelLeave.html.twig', $entity );
+			
             return $this->redirect($this->generateUrl('homepage'));
         }
 
@@ -352,31 +310,9 @@ class LeaveRequestController extends Controller
 			}
             $em->persist($entity);
             $em->flush();
-			$message = \Swift_Message::newInstance()
-			->setSubject('[F3E] Nouvelle demande de congés')
-			->setFrom('webmaster@f3e.asso.fr')
-			->setTo('l.delcayrou@f3e.asso.fr')
-			->setCc(array('h.hachouche@f3e.asso.fr'))
-			->setBody(
-            $this->renderView(
-                // app/Resources/views/Emails/registration.html.twig
-                'Emails/newLeave.html.twig',
-                array('entity' => $entity)
-            ),
-            'text/html'
-        )
-        /*
-         * If you also want to include a plaintext version of the message
-        ->addPart(
-            $this->renderView(
-                'Emails/registration.txt.twig',
-                array('name' => $name)
-            ),
-            'text/plain'
-        )
-        */
-    ;
-	$this->get('mailer')->send($message);
+            
+            $this->sendAdminMail('[F3E] Nouvelle demande de congés', 'Emails/newLeave.html.twig', $entity);
+			
             return $this->redirect($this->generateUrl('homepage'));
         }
 		$error_msg = '';
@@ -524,6 +460,30 @@ class LeaveRequestController extends Controller
     	
     	
     	
+    }
+    
+    private function sendAdminMail($subject, $template, $entity)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	$list_admin = $em->getRepository('AppBundle:User')->findUserByRole('ROLE_ADMIN');
+    	foreach($list_admin as $admin)
+    	{
+	    	$message = \Swift_Message::newInstance()
+	    	->setSubject($subject)
+	    	->setFrom('webmaster@f3e.asso.fr')
+	    	->setTo($admin->getEmail())
+	    	->setBody(
+	    			$this->renderView(
+	    					// app/Resources/views/Emails/registration.html.twig
+	    					$template,
+	    					array('entity' => $entity)
+	    					),
+	    			'text/html'
+	    			)
+	    			
+	    	;
+	    	$this->get('mailer')->send($message);
+    	}
     }
     
 }

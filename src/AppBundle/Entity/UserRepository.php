@@ -12,16 +12,15 @@ use AppBundle\Helper\DateHelper;
  */
 class UserRepository extends EntityRepository
 {
-	/**
-	* Récupère la liste des utilisateurs en leur adjoignant la totalité de leurs congés restants
-	*/
-	function findUserInfosWithLS()
+	
+	
+	public function findUserByRole($role)
 	{
-		$result =  $this->createQueryBuilder('u')
-			->addSelect('lm')
-			->join('u.userLeaveMonths', 'lm')
-			->where('(ld.leaveStatus = 1 or ld.leaveStatus = 2) and u.id=lm.user_id and u.enabled=1')
-			->getQuery()->getResult();
+		$result =  $this->createQueryBuilder()
+		->addSelect('u')
+		->where('u.role LIKE :roles')
+		->setParameters('roles', '%"'.$role.'"%')
+		->getQuery()->getResult();
 		
 		return $result;
 	}

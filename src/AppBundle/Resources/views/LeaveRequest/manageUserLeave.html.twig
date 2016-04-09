@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+{% block title %}Validation de congés {% endblock %}
+{% block body %}
+<!-- Présentation de la liste des congés disponibles --> 
+
+
+
+<!-- Présentation de la liste des demandes avec leur statut -->
+<div class="row">
+    <div class="box col-md-12">
+    <div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="glyphicon glyphicon-user"></i> Liste des congés validés</h2>
+
+       
+    </div>
+    <div class="box-content">
+    <table class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+    <thead>
+    <tr>
+        <th>Utilisateur</th>
+        <th>Type de congé</th>
+		
+		<th>Détail</th>
+        <th>Type de contrat</th>
+		<th>Nombre de jours</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+	<h1>{{ val }}</h1>
+    <h1>{{ error_msg }}</h1>
+    {% for entity in data %}
+    <tr>
+	{% set nbA = 0.0 %}
+	{% set alertM1 = 0 %}
+	
+	{% for entityBis in entity.user.userLeaveMonths %}
+		{% if entityBis.leaveType == entity.leaveType %}
+			{% set nbA = nbA + entityBis.nbAvailable - entityBis.nbUsed %}
+			{% if entityBis.year == -1 %}
+				{% set alertM1=1 %}
+			{% endif %}
+		{% endif %}
+	{% endfor %}
+    <td>{{ entity.user.fullName }}</td>
+    <td>{{ entity.leaveType.name }}</td>
+	<td><a id="detail_{{entity.id}}" class="btn {% if (alertM1 == 1) and (entity.user.contractType.name == 'CDI') %}
+	btn-warning 
+	{% else %}
+	btn-info
+	{% endif %}
+	btn-setting" 
+	href="#">
+                Détail
+				
+    </a>
+	
+	<div class="modal fade" id="dialog{{ entity.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>Détail</h3>
+                </div>
+                <div class="modal-body">
+                    <p><b>Date de la demande :</b> {{ entity.dateProposal|date('d-m-Y') }}</p>
+	<p><b>Date de début :</b> {{ entity.startDate|date('d-m-Y') }}       </p>
+	<p><b>Date de fin :</b> {{ entity.endDate|date('d-m-Y') }}</p>
+	{% if entity.leaveType.uniqueName == 'CP' or entity.leaveType.uniqueName == 'RTTV' or entity.leaveType.uniqueName == 'RTTF' %}
+	
+	<p><b>Congés disponibles : </b>{{ nbA }}</p>
+	{% if (alertM1 == 1) and (entity.user.contractType.name == 'CDI') %}
+		<p ><span class='btn btn-warning'>Attention ! </span> Une partie des congés est demandée en anticipation </p>
+	{% endif %}	
+{% endif %}	
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-primary" data-dismiss="modal">Fermer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+	</td>
+    
+    <td>{{ entity.user.contractType.name }}</td>
+    <td><p {% if nbA < entity.nbDays %} style="color:red" {% endif %} >  {{ entity.nbDays}}</p></td>
+	
+	<td class="center">
+    {% if entity.leaveStatus.name == 'Validé' %}
+            
+            <a class="btn btn-warning" href="{{ path('cancel_leave', { id: entity.id }) }}">
+                <i class="glyphicon glyphicon-ok-circle icon-white"></i>
+                Annuler
+            </a>
+            
+       {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    
+    
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    <!--/span-->
+
+    </div><!--/row-->
+	
+	<script>
+	{% for entity in data %}
+	$('#detail_{{entity.id}}').click(function (e) {
+        e.preventDefault();
+        $('#dialog{{entity.id}}').modal('show');
+    });
+	{%endfor %}
+	</script>
+{% endblock %}

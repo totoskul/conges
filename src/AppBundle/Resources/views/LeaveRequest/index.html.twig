@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<!-- Présentation de la liste des congés disponibles --> 
+
+<div class="row">
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="CP" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-road blue"></i>
+
+            <div>Congés payés disponibles</div>
+            <div>Année N-1 : {{ CP_N1 }}</div>
+            <div>Année N : {{ CP_N }}</div>
+            <span class="notification">{{ CP_N + CP_N1 }}</span>
+        </a>
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="RTT Fixes" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-align-left green"></i>
+
+            <div>RTT fixes</div>
+            <div>{{ RTT_Fixes }}</div>
+            <span class="notification green">{{ RTT_Fixes }}</span>
+        </a>
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="RTT Variables" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-align-center red"></i>
+
+            <div>RTT variables</div>
+            <div>{{RTT_variables}}</div>
+            <span class="notification yellow">{{RTT_variables}}</span>
+        </a>
+    </div>
+
+    
+</div>
+<div class="row">
+<div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="Nouvelle demande" class="well top-block" href={{path('request_new')}}>
+            <i class="glyphicon glyphicon-pencil yellow"></i>
+
+            <div>Faire une demande de congés</div>
+            <div></div>
+        </a>
+    </div>
+</div>
+
+<!-- Présentation de la liste des demandes avec leur statut -->
+<div class="row">
+    <div class="box col-md-12">
+    <div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="glyphicon glyphicon-user"></i> Liste des demandes</h2>
+
+        
+    </div>
+    <div class="box-content">
+    <table id="example" class="table table-striped table-bordered bootstrap-datatable datatable responsive">
+    <thead>
+    <tr>
+		
+        <th>Statut</th>
+        <th>Type de congé</th>
+        <th>Date de début</th>
+        <th>Date de fin</th>
+        <th>Nombre de jours</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+    {% for entity in data %}
+    <tr>
+	
+    <td class="center">
+            <span class="label-{{ entity.leaveStatus.color }} label label-default">{{ entity.leaveStatus.name }}</span>
+    </td>
+    <td>{{ entity.leaveType.name }}</td>
+    <td>{{ entity.fullStartDate  }}</td>
+    <td>{{ entity.fullEndDate }}</td>
+    <td>{{ entity.nbDays}}</td>
+    <td class="center">
+    {% if entity.leaveStatus.name == 'En attente' %}
+            
+            <a class="btn btn-warning" href="{{ path('cancel_request', { id: entity.id }) }}">
+                <i class="glyphicon glyphicon-remove icon-white"></i>
+                Annuler
+            </a>
+           
+    {% endif %}
+    {% if entity.leaveStatus.name == 'Validé' %}
+            {% if "now"|date('Ymd')  < entity.endDate|date('Ymd') %}
+
+            <a class="btn btn-warning" href="{{ path('cancel_leave', { id: entity.id }) }}">
+                <i class="glyphicon glyphicon-remove icon-white"></i>
+                Annuler
+            </a>
+			{% endif %}
+           
+    {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    
+    
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    
+    </div>
+	
+
+{% endblock %}

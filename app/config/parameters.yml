@@ -1,0 +1,14 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: f3e_sirh
+    database_user: f3e_sirh
+    database_password: f3e_leaves
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: fr
+    secret: dc795e57b39ee4cdc9d7760248da8041ab8db1d0

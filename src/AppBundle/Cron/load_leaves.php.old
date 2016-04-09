@@ -1,0 +1,91 @@
+<?php
+require_once "config.php";
+require_once "db_connect.php";
+$rq = "select * from ".DB_DATABASE.".fos_user";
+$res_user = db_select($rq);
+// Add current month
+$time_uniq = date('Ym');
+$year = date('Y');
+$month = date('m');
+$month_name = date('F');
+
+$rq = "select * from ".DB_DATABASE.".Time where timeName = '".$time_uniq."'";
+$res = db_select($rq);
+if(!$res['count'])
+{
+	// insertion si le mois n'existe pas
+	$rq = "insert into ".DB_DATABASE.".Time (timeName, month, year, monthName) " .
+			"VALUES ('".$time_uniq."', '".$month."', '".$year."', '".$month_name."')";
+	db_query($rq);
+	$rq = "select * from ".DB_DATABASE.".Time where timeName = '".$time_uniq."'";
+	$res = db_select($rq);
+	
+	
+}
+
+if($res['count'] )
+{
+	$time_id = $res['values'][0]['id'];
+}
+if($res_user['count'])
+{
+	foreach($res_user['values'] as $user)
+	{
+		
+		// RAZ des RTT fixes des mois anciens
+		$rq = "update ".DB_DATABASE.".UserLeaveMonth set nbAvailable = 0 where leave_type_id = 3 and user_id = ".$user['id'];
+		db_query($rq);
+		
+		// ajout des 3 types de congés
+		// CP
+		// on vérifie si les congés n'ont pas déjà été ajoutés
+		$rq = "select id from ".DB_DATABASE.".UserLeaveMonth where user_id = ".$user['id']." " .
+				"and leave_type_id = 1 and time_id = ".$time_id;
+		$nb = db_select($rq);
+		if(!$nb['count'])
+		{
+			// si non, on les ajoute
+			$rq = "insert into ".DB_DATABASE.".UserLeaveMonth (user_id, leave_type_id, time_id, nbAvailable, nbUsed) " .
+					"VALUES (".$user['id'].", 1, '".$time_id."', 2.08, 0)";
+			echo $rq."\n";
+			db_query($rq);	
+		}	
+		// RTT variables
+		// on vérifie si les congés n'ont pas déjà été ajoutés
+		$rq = "select id from ".DB_DATABASE.".UserLeaveMonth where user_id = ".$user['id']." " .
+				"and leave_type_id = 2 and time_id = ".$time_id;
+		$nb = db_select($rq);
+		if(!$nb['count'])
+		{
+			// si non, on les ajoute
+			$rq = "insert into ".DB_DATABASE.".UserLeaveMonth (user_id, leave_type_id, time_id, nbAvailable, nbUsed) " .
+					"VALUES (".$user['id'] .",2, '".$time_id."', 1, 0)";
+			db_query($rq);	
+		}	
+		// RTT Fixes
+		// on vérifie si les congés n'ont pas déjà été ajoutés
+		$rq = "select id from ".DB_DATABASE.".UserLeaveMonth where user_id = ".$user['id']." " .
+				"and leave_type_id = 3 and time_id = ".$time_id;
+		$nb = db_select($rq);
+		if(!$nb['count'])
+		{
+			// si non, on les ajoute
+			$rq = "insert into ".DB_DATABASE.".UserLeaveMonth (user_id, leave_type_id, time_id, nbAvailable, nbUsed) " .
+					"VALUES (".$user['id'].", 3, '".$time_id."', 1, 0)";
+			db_query($rq);	
+		}	
+		// Congés sans solde
+		// on vérifie si les congés n'ont pas déjà été ajoutés
+		$rq = "select id from ".DB_DATABASE.".UserLeaveMonth where user_id = ".$user['id']." " .
+				"and leave_type_id = 4 and time_id = ".$time_id;
+		$nb = db_select($rq);
+		if(!$nb['count'])
+		{
+			// si non, on les ajoute
+			$rq = "insert into ".DB_DATABASE.".UserLeaveMonth (user_id, leave_type_id, time_id, nbAvailable, nbUsed) " .
+					"VALUES (".$user['id'].", 4, '".$time_id."', 20, 0)";
+			db_query($rq);	
+		}			
+		
+	}
+}

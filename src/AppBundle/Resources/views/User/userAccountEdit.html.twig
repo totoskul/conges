@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    
+	<div class="row">
+	<div class="box col-md-12">
+        <div class="box-inner">
+		<a href="{{path("change_user_password", { id: entity.id })}}">Modifier le mot de passe</a>
+		{{ form_start(form, { attr: { class: 'form-horizontal', id: 'formUpdate' } }) }}
+             {{form_row(form.lastName,{'label': 'Nom : '})}}
+            {{form_row(form.firstName,{'label': 'Prénom : '})}}
+           {{form_row(form.serial,{'label': 'Matricule : '})}}
+            
+            {{form_row(form.arrival,{'label': 'Date d\'arrivée : '})}}
+            {{form_row(form.departure,{'label': 'Date de départ : '})}}
+
+            {{form_row(form.username,{'label': 'Nom d\'utilisateur : '})}}
+            
+            {{form_row(form.email,{'label': 'email : '})}}
+            {{form_row(form.contractType,{'label': 'Type de contrat : '})}}
+
+            
+            
+            
+            
+            <div class="hr hr-24"></div>
+            <div class="col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+                {{ form_widget(form.Modifier, { attr: { class: 'btn btn-success' },  }) }}
+                <a href="{{ app.request.headers.get('referer') }}">
+                    {{ form_widget(form.Annuler, { attr: { class: 'btn btn-warning' }, icon: 'times' }) }}
+                </a>
+            </div>
+            {{ form_errors(form) }}
+    		{{ form_widget(form) }}
+        {{ form_end(form) }}
+        </div>
+        </div>
+    </div>
+{% endblock %}

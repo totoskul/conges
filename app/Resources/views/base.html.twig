@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}F3E{% endblock %}</title>
+        {% block stylesheets %}
+        <link id="bs-css" href="{{ asset('bundles/public/css/bootstrap-united.min.css') }}" rel="stylesheet">
+		<link href="{{ asset('bundles/public/css/charisma-app.css') }}" rel="stylesheet">
+		<link href="{{ asset('bundles/public/bower_components/fullcalendar/dist/fullcalendar.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/bower_components/fullcalendar/dist/fullcalendar.print.css') }}" rel='stylesheet' media='print'>
+		<link href="{{ asset('bundles/public/bower_components/chosen/chosen.min.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/bower_components/colorbox/example3/colorbox.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/bower_components/responsive-tables/responsive-tables.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/css/jquery.noty.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/css/noty_theme_default.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/css/elfinder.min.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/css/elfinder.theme.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/css/jquery.iphone.toggle.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/css/uploadify.css') }}" rel='stylesheet'>
+		<link href="{{ asset('bundles/public/css/animate.min.css') }}" rel='stylesheet'>
+        <link href="{{ asset('bundles/public/css/jquery-ui.css') }}" rel='stylesheet'>
+        
+		{% endblock %}
+		
+        <style>
+	label { display: inline-block; width: 300px; }
+	input:-moz-read-only { /* For Firefox */
+    border-color: yellow;
+}
+
+input:read-only { 
+    border-color: yellow;
+}
+	</style>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	{% block javascripts %}{% endblock %}
+        <!-- jQuery -->
+        <script src="{{ asset('bundles/public/bower_components/jquery/jquery.js') }}"></script>
+		
+		<script src="{{ asset('bundles/public/js/jquery-ui.min.js') }}"></script>
+		<script src="{{ asset('bundles/public/js/jquery.ui.datepicker-fr.js') }}"></script>
+        
+        <script src="{{ asset('bundles/public/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+ 
+		<script src="{{ asset('bundles/public/js/jquery.cookie.js') }}"></script>
+ 
+		<script src="{{ asset('bundles/public/bower_components/moment/min/moment.min.js') }}"></script>
+		<script src="{{ asset('bundles/public/bower_components/fullcalendar/dist/fullcalendar.min.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/jquery.dataTables.min.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/bower_components/chosen/chosen.jquery.min.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/bower_components/colorbox/jquery.colorbox-min.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/jquery.noty.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/bower_components/responsive-tables/responsive-tables.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/jquery.raty.min.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/jquery.iphone.toggle.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/jquery.autogrow-textarea.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/jquery.uploadify-3.1.min.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/jquery.history.js') }}"></script>
+		 
+		<script src="{{ asset('bundles/public/js/charisma.js') }}"></script>
+		<script type="text/javascript">
+$(document).ready(function(){
+$("form input.date").datepicker({
+    dateFormat: 'dd/mm/yy',
+	inline:true,	
+	minDate: new Date(2014, 1 - 1, 1),
+	maxDate: new Date(2034, 1 - 1, 1),
+})});
+  
+  
+</script>
+    </head>
+    <body>
+    	<div class="navbar navbar-default" role="navigation">
+			<span><a class="btn btn-warning" href="{{ path('user_logout') }}">Déconnexion</a></span>
+			<div class="navbar-inner">
+				<button type="button" class="navbar-toggle pull-left animated flip">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="{{ url('homepage') }}"> <img alt="F3e Logo" src="{{asset('bundles/public/img/f3e_logo2_6.png') }}" class="hidden-xs"/>
+				<span>Congés</span></a>
+				
+				
+ 
+ 
+
+ 
+			</div>
+		</div>
+ 
+		<div class="ch-container">
+			<div class="row">
+ 				<div class="col-sm-2 col-lg-2">
+					<div class="sidebar-nav">
+						<div class="nav-canvas">
+							<div class="nav-sm nav nav-stacked">
+							</div>
+							<ul class="nav nav-pills nav-stacked main-menu">
+								<li class="nav-header">Menu</li>
+								<li><a class="ajax-link" href="{{ path('homepage') }}"><i class="glyphicon glyphicon-plane"></i><span> Congés</span></a>
+								</li>
+								{% if is_granted("ROLE_ADMIN") %}
+    							<li><a class="ajax-link" href="{{ path('validate') }}"><i class="glyphicon glyphicon-ok-sign"></i><span> Congés à valider</span></a>
+								</li>
+								<li><a class="ajax-link" href="{{ path('user_list') }}"><i class="glyphicon glyphicon-user"></i><span> Salarié-e-s</span></a>
+								</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div id="content" class="col-lg-10 col-sm-10">
+					{% block body %}{% endblock %}
+				</div>
+        	</div>
+		</div>
+ 
+ 
+
+ 
+
+        
+    </body>
+</html>

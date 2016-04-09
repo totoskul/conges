@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="CP" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-road blue"></i>
+
+            <div>Congés payés disponibles</div>
+            <div>Année N-1 : {{ CP_N1 }}</div>
+            <div>Année N : {{ CP_N }}</div>
+            <span class="notification">{{ CP_N + CP_N1 }}</span>
+        </a>
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="RTT Fixes" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-align-left green"></i>
+
+            <div>RTT fixes</div>
+            <div>{{ RTT_Fixes }}</div>
+            <span class="notification green">{{ RTT_Fixes }}</span>
+        </a>
+    </div>
+
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <a data-toggle="tooltip" title="RTT Variables" class="well top-block" href="#">
+            <i class="glyphicon glyphicon-align-center red"></i>
+
+            <div>RTT variables</div>
+            <div>{{RTT_variables}}</div>
+            <span class="notification yellow">{{RTT_variables}}</span>
+        </a>
+    </div>
+
+    
+</div>
+
+	<div class="row">
+	<div class="box col-md-12">
+        <div class="box-inner">
+		
+			<h1> {{ error_msg }}</h1>
+        {{ form_start(form, { attr: { class: 'form-horizontal', id: 'formNew' } }) }}
+            {{ form_row(form.startDate, {'label': 'Date de début (JJ/MM/AAAA) : '}) }}
+            {{ form_row(form.LeaveStartPeriod, {'label': 'Tranche horaire de début : '}) }}
+            {{ form_row(form.endDate, {'label': 'Date de fin (JJ/MM/AAAA) : '}) }}
+            {{ form_row(form.LeaveEndPeriod, {'label': 'Tranche horaire de fin : '}) }}
+            {{ form_row(form.LeaveType, {'label': 'Type de congé : ', 'attr': {'onChange':'requireComment();'}}) }}
+            {{ form_row(form.commentUser, {'label': 'Commentaire : '}) }}
+            <div class="hr hr-24"></div>
+            <div class="col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+                {{ form_widget(form.Créer, { attr: { class: 'btn btn-success' },  }) }}
+                <a href="{{ app.request.headers.get('referer') }}">
+                    {{ form_widget(form.Annuler, { attr: { class: 'btn btn-warning' }, icon: 'times' }) }}
+                </a>
+            </div>
+            {{ form_errors(form) }}
+    		{{ form_widget(form) }}
+        {{ form_end(form) }}
+        </div>
+        </div>
+    </div>
+	<script type="text/javascript">
+function requireComment(){
+//console.log(document.getElementById("f3e_app_bundle_request_commentUser"));
+//document.getElementById("f3e_app_bundle_request_commentUser").required = false;
+var selected_type = $("#f3e_app_bundle_request_LeaveType").val();
+console.log(selected_type);
+switch(selected_type)
+{
+	case '1':
+	case '2':
+	case '3':
+	console.log("not required");
+		document.getElementById("f3e_app_bundle_request_commentUser").required = false;
+		break;
+	case '4': 
+	case '5':
+	default:
+	console.log("Required");
+		document.getElementById("f3e_app_bundle_request_commentUser").required = true;
+		break;
+	
+}
+};
+
+
+
+</script>
+
+
+{% endblock %}
+
+

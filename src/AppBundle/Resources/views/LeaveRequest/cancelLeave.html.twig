@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+   <div class="row">
+	<div class="box col-md-12">
+        <div class="box-inner">
+        {{ form_start(form, { attr: { class: 'form-horizontal', id: 'formUpdate' } }) }}
+            Êtes-vous sûr-e de vouloir annuler cette demande de congés ?
+            <div>{{form_label(form.commentUser, 'Commentaire')}} {{ form_widget(form.commentUser) }}</div>
+            
+            <div class="hr hr-24"></div>
+            <div class="col-xs-offset-4 col-sm-offset-4 col-md-offset-4">
+                {{ form_widget(form.Confirmer, { attr: { class: 'btn btn-success' },  }) }}
+                <a href="{{ app.request.headers.get('referer') }}">
+                    {{ form_widget(form.Retour, { attr: { class: 'btn btn-warning' }, icon: 'times' }) }}
+                </a>
+            </div>
+            {{ form_errors(form) }}
+    		{{ form_widget(form) }}
+        {{ form_end(form) }}
+        </div>
+        </div>
+    </div> 
+	
+{% endblock %}

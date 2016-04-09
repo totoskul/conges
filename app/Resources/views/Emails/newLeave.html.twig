@@ -1,0 +1,11 @@
+﻿<h3>Une demande de congés vient d'être déposée ! </h3>
+
+<p><b>Rappel : </b></p>
+
+<p>Demandeur : {{entity.user.firstName}} {{entity.user.lastName}} </p>
+<p>Type de congé : {{ entity.leaveType.name}}</p>
+<p>Date de début : {{ entity.startDate |date('d-m-Y')}} </p>
+<p>Date de fin : {{entity.endDate|date('d-m-Y')}}</p>
+<p>Nombre de journées : {{ entity.nbDays}}</p>
+
+Bonne journée ! 

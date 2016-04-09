@@ -475,7 +475,7 @@ class LeaveRequestController extends Controller
 		    	->setFrom('webmaster@f3e.asso.fr')
 		    	->setTo($admin->getEmail())
 		    	->setBody(
-		    			$this->renderView(
+		    			$this->renderView( 
 		    					// app/Resources/views/Emails/registration.html.twig
 		    					$template,
 		    					array('entity' => $entity)

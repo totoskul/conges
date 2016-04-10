@@ -20,7 +20,7 @@ class UserObserver
     
     /**
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * @ORM\OneToMany(targetEntity="User")
+     * @ORM\OneToMany(targetEntity="User", mappedBy="User")
      */
     private $user;
     

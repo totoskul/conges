@@ -64,6 +64,8 @@ class User extends BaseUser
      * @ORM\ManyToOne(targetEntity="ContractType")
      */
     private $contractType;
+    
+    
      
 	
     public function __construct()

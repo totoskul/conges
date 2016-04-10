@@ -1,16 +1,15 @@
 <?php
-// src/Acme/UserBundle/Entity/User.php
-
+// src/Acme/UserBundle/Entity/UserObserver.php
 namespace AppBundle\Entity;
 
-use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="UserObserver")
  */
-class User extends BaseUser
+class UserObserver
 {
     /**
      * @ORM\Id
@@ -65,7 +64,7 @@ class User extends BaseUser
      */
     private $contractType;
      
-
+	
     public function __construct()
     {
         parent::__construct();

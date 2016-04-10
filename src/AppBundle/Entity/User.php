@@ -65,6 +65,16 @@ class User extends BaseUser
      */
     private $contractType;
     
+    /**
+     * @ORM\JoinColumn(name="observer_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="UserObserver")
+     */
+    private $UserObserver;
+    
+    
+    
+    
+    
     
      
 	

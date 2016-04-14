@@ -46,7 +46,7 @@
 				{% set nbN1 = nbN1 + entityBis.nbAvailable - entityBis.nbUsed %}
 			{% else %}
 				{% set nbN = nbN + entityBis.nbAvailable - entityBis.nbUsed %}
-				{% if entityBis.nbUsed > 0 %}
+				{% if entityBis.nbUsed > 0.0 %}
 					{% if entity.leaveType.uniqueName == 'CP'  %}
 						{% set alertM1=1 %}
 					{% endif %}

@@ -46,14 +46,15 @@
 				{% set nbN1 = nbN1 + entityBis.nbAvailable - entityBis.nbUsed %}
 			{% else %}
 				{% set nbN = nbN + entityBis.nbAvailable - entityBis.nbUsed %}
+				{% if entityBis.nbUsed <> 0 %}
+					{% if entity.leaveType.uniqueName == 'CP'  %}
+						{% set alertM1=1 %}
+					{% endif %}
+				{% endif %}
 			{% endif %}
 		{% endif %}
 	{% endfor %}
-	{% if entity.nbDays > nbN1 %}
-		{% if entity.leaveType.uniqueName == 'CP'  %}
-			{% set alertM1=1 %}
-		{% endif %}
-	{% endif %}
+	
     <td>{{ entity.user.fullName }}</td>
     <td>{{ entity.leaveType.name }}</td>
 	<td><a id="detail_{{entity.id}}" class="btn {% if (alertM1 == 1) and (entity.user.contractType.name == 'CDI') %}
